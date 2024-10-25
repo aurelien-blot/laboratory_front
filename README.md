@@ -1,4 +1,4 @@
-# laboritory_front
+# laboratory_front
 
 ## Project setup
 ```
