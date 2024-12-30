@@ -11,6 +11,9 @@
             <li>
               <router-link to="/mapgen">Map generator</router-link>
             </li>
+            <li>
+              <router-link to="/truckloading">Truck Loading</router-link>
+            </li>
           </ul>
         </div>
       </div>
