@@ -5,3 +5,8 @@
 </template>
 <script setup>
 </script>
+<style>
+  #app {
+    background-color: #001427;
+  }
+</style>
