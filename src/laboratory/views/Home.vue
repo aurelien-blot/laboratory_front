@@ -8,10 +8,11 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-4 " v-for="project in projects" @click="goTo(project)">
-          <div class="project-btn">
+        <div class="col-4 " v-for="project in projects" >
+          <button class="project-btn" @click="goTo(project)"
+                  :disabled="project.needConnection==true && isConnectedToApi!=true">
             <b class="">{{project.name}}</b>
-          </div>
+          </button>
         </div>
       </div>
     </template>
@@ -20,8 +21,11 @@
 
 <script>
 
-import {mapGetters} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 import BasicViewComponent from "@/laboratory/components/BasicViewComponent.vue";
+import BiomeApiService from "@/map_gen/services/api/biomeApiService.js";
+import ErrorService from "@/laboratory/services/errorService.js";
+import TestApiService from "@/laboratory/services/api/testApiService.js";
 
 export default {
   name: 'Home',
@@ -33,13 +37,16 @@ export default {
       projects :[
         {
           name: "Map generator",
-          link: "/mapgen"
+          link: "/mapgen",
+          needConnection: true
         },
         {
           name: "Truck Loading",
-          link: "/truckloading"
+          link: "/truckloading",
+          needConnection: false
         }
-      ]
+      ],
+      isConnectedToApi: false
     }
 
   },
@@ -50,11 +57,26 @@ export default {
 
   },
   methods: {
+    ...mapActions(['setLoading']),
     goTo(project){
       this.$router.push(project.link);
+    },
+    async testConnection(){
+      this.setLoading(true);
+      this.isConnectedToApi = false;
+      let that = this;
+      await TestApiService.testConnection().then((results) => {
+
+        that.isConnectedToApi=results;
+      }).catch((error) => {
+        that.isConnectedToApi=false;
+      });
+      await this.setLoading(false);
+      console.log(that.isConnectedToApi);
     }
   },
   mounted() {
+    this.testConnection();
   }
 }
 
@@ -73,6 +95,11 @@ export default {
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Ombre légère */
     border: none;
     color: #D7DDE3;
+  }
+
+  .project-btn:disabled {
+    background:  linear-gradient(90deg, #a6a6a6, #a6a6a6, #a6a6a6);
+    color: grey;
   }
 
   h1 {
