@@ -3,7 +3,7 @@
     <template v-slot:content>
       <div class="row mb-10 mt-3">
         <div class="col-12 text-center ">
-          <h1>Chargement de camion</h1>
+          <h1 class="project-title">Chargement de camion</h1>
         </div>
       </div>
       <div class="row">

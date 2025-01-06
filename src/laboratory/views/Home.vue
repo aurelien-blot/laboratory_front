@@ -4,7 +4,7 @@
     <template v-slot:content>
       <div class="row mb-10 mt-3">
         <div class="col-12 text-center ">
-          <h1>My LAB</h1>
+          <h1 class="project-title">My LAB</h1>
         </div>
       </div>
       <div class="row">
@@ -43,6 +43,11 @@ export default {
         {
           name: "Truck Loading",
           link: "/truckloading",
+          needConnection: false
+        },
+        {
+          name: "3D Playground",
+          link: "/3d",
           needConnection: false
         }
       ],
@@ -102,7 +107,4 @@ export default {
     color: grey;
   }
 
-  h1 {
-    color: #D7DDE3;
-  }
 </style>
