@@ -26,6 +26,7 @@ import SettingsComponent from "@/truck_loading/components/SettingsComponent.vue"
 import TruckDrawComponent from "@/truck_loading/components/TruckDrawComponent.vue";
 import LoadingService from "@/truck_loading/services/loadingService.js";
 import * as THREE from "three";
+import ObjectService from "@/3d_playground/services/objectService.js";
 
 export default {
   name: 'PlaygroundHome',
@@ -34,6 +35,17 @@ export default {
   },
   data() {
     return {
+      camera : null,
+      renderer : null,
+      sizeReduction: 0.5,
+      sceneBackgroundColor: 0xffffff,
+      cameraSettings: {
+        position: {
+          x: 0,
+          y: 0,
+          z: 5
+        }
+      }
     }
   },
   computed: {
@@ -48,42 +60,50 @@ export default {
     },
     createScene() {
       const scene = new THREE.Scene();
+      scene.background = new THREE.Color(this.sceneBackgroundColor);
+      this.initCamera();
+      this.renderer = new THREE.WebGLRenderer();
+      this.renderer.setSize(window.innerWidth*this.sizeReduction, window.innerHeight*this.sizeReduction);
+      document.getElementById("scene").appendChild(this.renderer.domElement);
 
-      // Set background color to white
-      scene.background = new THREE.Color(0xffffff);
-
-      const camera = new THREE.PerspectiveCamera(
+      let object1 = ObjectService.cube(1,1,1,/**/"#ff5733");
+      let object2 = ObjectService.capsule(1,1,10, 15,/**/"#ff5733");
+      let object3 = ObjectService.circle(1,32,null, null,/**/);
+      let objects = [];
+      objects.push(object1);
+      //objects.push(object2);
+      //objects.push(object3);
+      this.addObject(scene, objects);
+      this.startAnimation(scene, object1);
+    },
+    initCamera(){
+      this.camera = new THREE.PerspectiveCamera(
           75,
           window.innerWidth / window.innerHeight,
           0.1,
           1000
       );
-      camera.position.z = 5;
+      this.camera.position.x = this.cameraSettings.position.x;
+      this.camera.position.y = this.cameraSettings.position.y;
+      this.camera.position.z = this.cameraSettings.position.z;
 
-      const renderer = new THREE.WebGLRenderer();
-      renderer.setSize(window.innerWidth*0.5, window.innerHeight*0.5);
-      document.getElementById("scene").appendChild(renderer.domElement);
-
-      let cube = this.addCube(scene);
-
-      scene.add(cube);
-      this.startAnimation(renderer, scene, camera, cube);
     },
-    addCube(){
-      const geometry = new THREE.BoxGeometry(1, 1, 1);
-      const material = new THREE.MeshBasicMaterial({ color: 0x808080 });
-      return new THREE.Mesh(geometry, material);
+    addObject(scene, objects){
+      objects.forEach((object) => {
+        scene.add(object);
+      });
     },
-    startAnimation : function (renderer, scene, camera, cube) {
+    startAnimation : function (scene, object) {
+      let that=this;
       const animate = () => {
         requestAnimationFrame(animate);
 
         // Optional rotation for the cube
-        cube.rotation.x += 0.01;
-        cube.rotation.y += 0.01;
+        object.rotation.x += 0.01;
+        object.rotation.y += 0.01;
 
         // Render the scene
-        renderer.render(scene, camera);
+        that.renderer.render(scene, that.camera);
       };
       animate();
     }
