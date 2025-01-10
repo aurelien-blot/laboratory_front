@@ -20,13 +20,11 @@
 
 <script>
 
-import {mapGetters} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 import BasicViewComponent from "@/laboratory/components/BasicViewComponent.vue";
-import SettingsComponent from "@/truck_loading/components/SettingsComponent.vue";
-import TruckDrawComponent from "@/truck_loading/components/TruckDrawComponent.vue";
-import LoadingService from "@/truck_loading/services/loadingService.js";
 import * as THREE from "three";
 import ObjectService from "@/3d_playground/services/objectService.js";
+import LoaderService from "@/3d_playground/services/LoaderService.js";
 
 export default {
   name: 'PlaygroundHome',
@@ -45,7 +43,8 @@ export default {
           y: 0,
           z: 5
         }
-      }
+      },
+      objects :[]
     }
   },
   computed: {
@@ -55,8 +54,16 @@ export default {
 
   },
   methods: {
-    launchPlayGround() {
-      this.createScene();
+    ...mapActions(['setLoading']),
+    async launchPlayGround() {
+      this.setLoading(true);
+      let scene = this.createScene();
+      let objects = this.createObjects();
+      let models = this.createModels();
+      this.addObjects(scene, objects);
+      await this.addModels(scene, models);
+      //this.startAnimation(scene, objects[0]);
+      this.setLoading(false);
     },
     createScene() {
       const scene = new THREE.Scene();
@@ -65,16 +72,22 @@ export default {
       this.renderer = new THREE.WebGLRenderer();
       this.renderer.setSize(window.innerWidth*this.sizeReduction, window.innerHeight*this.sizeReduction);
       document.getElementById("scene").appendChild(this.renderer.domElement);
-
+      return scene;
+    },
+    createObjects(){
       let object1 = ObjectService.cube(1,1,1,/**/"#ff5733");
       let object2 = ObjectService.capsule(1,1,10, 15,/**/"#ff5733");
       let object3 = ObjectService.circle(1,32,null, null,/**/);
       let objects = [];
-      objects.push(object1);
+      //objects.push(object1);
       //objects.push(object2);
       //objects.push(object3);
-      this.addObject(scene, objects);
-      this.startAnimation(scene, object1);
+      return objects;
+    },
+    createModels() {
+      let models = [];
+      models.push("skull.gltf");
+      return models;
     },
     initCamera(){
       this.camera = new THREE.PerspectiveCamera(
@@ -88,9 +101,14 @@ export default {
       this.camera.position.z = this.cameraSettings.position.z;
 
     },
-    addObject(scene, objects){
+    addObjects(scene, objects){
       objects.forEach((object) => {
         scene.add(object);
+      });
+    },
+    addModels(scene, models){
+      models.forEach((model) => {
+        LoaderService.addModelToScene(model, scene)
       });
     },
     startAnimation : function (scene, object) {
