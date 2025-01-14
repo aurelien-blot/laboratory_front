@@ -59,10 +59,10 @@ export default {
       this.setLoading(true);
       let scene = this.createScene();
       let objects = this.createObjects();
-      let models = this.createModels();
+      //let models = this.createModels();
       this.addObjects(scene, objects);
-      await this.addModels(scene, models);
-      //this.startAnimation(scene, objects[0]);
+      //await this.addModels(scene, models);
+      this.startAnimation(scene, objects[0]);
       this.setLoading(false);
     },
     createScene() {
@@ -79,7 +79,7 @@ export default {
       let object2 = ObjectService.capsule(1,1,10, 15,/**/"#ff5733");
       let object3 = ObjectService.circle(1,32,null, null,/**/);
       let objects = [];
-      //objects.push(object1);
+      objects.push(object1);
       //objects.push(object2);
       //objects.push(object3);
       return objects;

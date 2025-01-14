@@ -1,7 +1,6 @@
 <template>
   <div class="row">
-    <div class="col-12 text-center">Dessin</div>
-    <div class="col-12 text-center mt-5" >
+    <div class="col-12 text-center" >
       <canvas ref="truckCanvas" :width="122.5" :height="670" style="border: 1px solid black;"></canvas>
     </div>
 
@@ -52,33 +51,35 @@ export default {
 
       // Nettoyer le canevas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+      // Dessiner le fond blanc pour le camion
+      ctx.fillStyle = "white"; // Couleur de fond
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
       // Dessiner les limites du camion
 
-      console.log( canvas.width)
-      console.log( canvas.height)
       // Dessiner chaque palette
       this.loadingList.forEach((layer) => {
-        layer.items.forEach((palette) => {
-          const x = palette.x / this.reductionFactor; // Position horizontale
-          const y = palette.y / this.reductionFactor; // Position verticale
-          const width = palette.width / this.reductionFactor; // Largeur palette
-          const height = palette.depth / this.reductionFactor; // Profondeur palette
+          layer.columns.forEach((column) => {
+            column.forEach((palette) => {
+              const x = palette.x / this.reductionFactor; // Position horizontale
+              const y = palette.y / this.reductionFactor; // Position verticale
+              const width = palette.width / this.reductionFactor; // Largeur palette
+              const height = palette.depth / this.reductionFactor; // Profondeur palette
 
-          // Dessiner la palette
-          //ctx.fillStyle = "rgba(0, 120, 255, 0.7)";
-          ctx.fillStyle = ColorService.generateRandomColor();
-          ctx.fillRect(x, y, width, height);
+              // Dessiner la palette
+              //ctx.fillStyle = "rgba(0, 120, 255, 0.7)";
+              ctx.fillStyle = ColorService.generateRandomColor();
+              ctx.fillRect(x, y, width, height);
 
-          // Ajouter le numéro de la palette
-          ctx.fillStyle = "black";
-          ctx.font = "12px Arial";
-          ctx.fillText(`#${palette.number}`, x + 5, y + 15);
+              // Ajouter le numéro de la palette
+              ctx.fillStyle = "black";
+              ctx.font = "12px Arial";
+              ctx.fillText(`#${palette.number}`, x + 5, y + 15);
 
-          ctx.fillStyle = "white";
-          ctx.font = "12px Arial";
-          ctx.fillText(`#${palette.number}`, x + 5, y + 30);
-        });
+              ctx.fillStyle = "white";
+              ctx.font = "12px Arial";
+              ctx.fillText(`#${palette.number}`, x + 5, y + 30);
+            });
+          });
       });
     },
     applyTruckReduction() {

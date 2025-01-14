@@ -1,0 +1,21 @@
+[
+  {"number": 1, "width": 1200, "depth": 850, "height": 1100},
+  {"number": 2, "width": 1200, "depth": 800, "height": 800},
+  {"number": 3, "width": 1200, "depth": 1000, "height": 1700},
+  {"number": 4, "width": 1200, "depth": 800, "height": 970},
+  {"number": 5, "width": 1200, "depth": 800, "height": 1500},
+  {"number": 6, "width": 1200, "depth": 800, "height": 1550},
+  {"number": 7, "width": 1200, "depth": 800, "height": 1940},
+  {"number": 8, "width": 1200, "depth": 800, "height": 1620},
+  {"number": 9, "width": 1200, "depth": 800, "height": 1920},
+  {"number": 10, "width": 1200, "depth": 800, "height": 1630},
+  {"number": 11, "width": 1200, "depth": 800, "height": 1750},
+  {"number": 12, "width": 1200, "depth": 800, "height": 2230},
+  {"number": 13, "width": 1200, "depth": 800, "height": 1750},
+  {"number": 14, "width": 1200, "depth": 800, "height": 1750},
+  {"number": 15, "width": 1200, "depth": 800, "height": 920},
+  {"number": 16, "width": 1200, "depth": 800, "height": 920},
+  {"number": 17, "width": 1200, "depth": 800, "height": 2230},
+  {"number": 18, "width": 1200, "depth": 800, "height": 500},
+  {"number": 19, "width": 1200, "depth": 1000, "height": 900}
+]
