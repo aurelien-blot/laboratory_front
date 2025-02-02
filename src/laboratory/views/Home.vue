@@ -8,7 +8,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-4 " v-for="project in projects" >
+        <div class="col-4 mb-4" v-for="project in projects" >
           <button class="project-btn" @click="goTo(project)"
                   :disabled="project.needConnection==true && isConnectedToApi!=true">
             <b class="">{{project.name}}</b>
@@ -23,8 +23,6 @@
 
 import {mapActions, mapGetters} from "vuex";
 import BasicViewComponent from "@/laboratory/components/BasicViewComponent.vue";
-import BiomeApiService from "@/map_gen/services/api/biomeApiService.js";
-import ErrorService from "@/laboratory/services/errorService.js";
 import TestApiService from "@/laboratory/services/api/testApiService.js";
 
 export default {
@@ -49,9 +47,15 @@ export default {
           name: "3D Playground",
           link: "/3d",
           needConnection: false
+        },
+        {
+          name: "Quick Mail",
+          link: "/quick-mail",
+          needConnection: true
         }
       ],
-      isConnectedToApi: false
+      isConnectedToApi: false,
+      timeOut : 1000
     }
 
   },
@@ -70,8 +74,7 @@ export default {
       this.setLoading(true);
       this.isConnectedToApi = false;
       let that = this;
-      await TestApiService.testConnection().then((results) => {
-
+      await TestApiService.testConnection(that.timeOut).then((results) => {
         that.isConnectedToApi=results;
       }).catch((error) => {
         that.isConnectedToApi=false;
@@ -92,7 +95,7 @@ export default {
     padding: 20px 20px;
     display: inline-block;
     border-radius: 20px; /* Pour les bords arrondis */
-    color: white;
+    width: 180px;
     font-family: Arial, sans-serif;
     font-size: 16px;
     text-align: center;
@@ -105,6 +108,7 @@ export default {
   .project-btn:disabled {
     background:  linear-gradient(90deg, #a6a6a6, #a6a6a6, #a6a6a6);
     color: grey;
+
   }
 
 </style>
