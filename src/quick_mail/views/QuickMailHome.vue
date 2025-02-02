@@ -10,25 +10,25 @@
         <div class="row emailForm">
           <Form novalidate @submit.prevent="sendEmail" v-if="email!=null">
             <div class="mb-3">
+              <label for="senderMail" class="form-label">Mail de l'expéditeur</label>
+              <Field name="senderMail" type="text" v-model="email.senderMail"
+                     class="form-control" label="Mail de l'expéditeur"
+                     id="senderMail" rules="required|email"/>
+              <ErrorMessage name="senderMail" class="text-danger"/>
+            </div>
+            <div class="mb-3">
+              <label for="senderName" class="form-label">Nom de l'expéditeur</label>
+              <Field name="senderName" type="text" v-model="email.senderName"
+                     class="form-control" label="Nom de l'expéditeur"
+                     id="senderName" rules="required"/>
+              <ErrorMessage name="senderName" class="text-danger"/>
+            </div>
+            <div class="mb-3">
               <label for="to" class="form-label">Destinataire</label>
               <Field name="to" type="text" v-model="email.to"
                      class="form-control" label="Destinataire"
-                     id="to" rules="required|emailList"/>
+                     id="to" rules="required|email"/>
               <ErrorMessage name="to" class="text-danger"/>
-            </div>
-            <div class="mb-3">
-              <label for="cc" class="form-label">CC (optionnel)</label>
-              <Field name="cc" type="text" v-model="email.cc"
-                     class="form-control" label="CC (optionnel)"
-                     id="cc" rules="emailList"/>
-              <ErrorMessage name="cc" class="text-danger"/>
-            </div>
-            <div class="mb-3">
-              <label for="username" class="form-label">CCI (optionnel)</label>
-              <Field name="cci" type="text" v-model="email.cci"
-                     class="form-control" label="CCI (optionnel)"
-                     id="cci" rules="emailList"/>
-              <ErrorMessage name="cci" class="text-danger"/>
             </div>
             <div class="mb-3">
               <label for="username" class="form-label">Objet</label>
@@ -81,18 +81,14 @@
 import {mapActions, mapGetters} from "vuex";
 import BasicViewComponent from "@/laboratory/components/BasicViewComponent.vue";
 import {Field, defineRule, ErrorMessage, Form, configure} from 'vee-validate';
-import {required} from '@vee-validate/rules';
+import {required, email} from '@vee-validate/rules';
 import UtilService from "@/laboratory/services/utilService.js";
 import ErrorService from "@/laboratory/services/errorService.js";
 import MailService from "@/quick_mail/services/api/mailService.js";
 
 
 defineRule('required', required);
-defineRule('emailList', (value) => {
-  if (!value) return true; // Champ vide accepté (cas des champs optionnels)
-  const emails = value.split(';').map(email => email.trim());
-  return UtilService.isEmailList(value) ? true : 'Une ou plusieurs adresses email ne sont pas valides. Si plusieurs valeurs : séparez par des points-virgules.';
-});
+defineRule('email', email);
 
 configure({
   generateMessage: (ctx) => {
@@ -124,9 +120,9 @@ export default {
     ...mapGetters(['isTestMode', "isLoading"]),
     canSubmit() {
       return this.email != null &&
-          this.email.to != null && this.email.to.length > 0 && UtilService.isEmailList(this.email.to)
-          && (this.email.cc == null || this.email.cc.length === 0 || UtilService.isEmailList(this.email.cc))
-          && (this.email.cci == null || this.email.cci.length === 0 || UtilService.isEmailList(this.email.cci))
+          this.email.to != null && this.email.to.length > 0 && UtilService.isEmail(this.email.to)
+          && this.email.senderMail != null && this.email.senderMail.length > 0 && UtilService.isEmail(this.email.senderMail)
+          && this.email.senderName != null && this.email.senderName.length > 0
           && this.email.subject != null && this.email.subject.length > 0
     },
   },
@@ -139,10 +135,10 @@ export default {
       this.successMessage = null;
       this.errorMessage = null;
       this.email = {
-        to: "azefaze@adea.fr;azeafafa@sfjsfes.fr",
-        cc: "",
-        cci: "",
-        subject: "test",
+        senderMail: "",
+        senderName: "",
+        to: "",
+        subject: "",
         body: ""
       }
     },
@@ -156,8 +152,9 @@ export default {
           that.email = null;
         }
       }).catch((error) => {
-        if(error.status==500){
-          that.errorMessage = "Erreur lors de l'envoi de l'email : " + error.message;
+        if(error.status===500){
+          console.log(error)
+          that.errorMessage = "Erreur lors de l'envoi de l'email : " + error.response.data;
           that.email = null;
         }
         else{
