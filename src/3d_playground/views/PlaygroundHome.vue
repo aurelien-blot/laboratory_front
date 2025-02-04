@@ -58,11 +58,13 @@ export default {
     async launchPlayGround() {
       this.setLoading(true);
       let scene = this.createScene();
-      let objects = this.createObjects();
+      //let objects = this.createObjects();
+      let truckObjects = this.createTruck();
       //let models = this.createModels();
-      this.addObjects(scene, objects);
+      //this.addObjects(scene, objects);
+      this.addObjects(scene, truckObjects);
       //await this.addModels(scene, models);
-      this.startAnimation(scene, objects[0]);
+      this.startAnimation(scene, truckObjects);
       this.setLoading(false);
     },
     createScene() {
@@ -78,6 +80,7 @@ export default {
       let object1 = ObjectService.cube(1,1,1,/**/"#ff5733");
       let object2 = ObjectService.capsule(1,1,10, 15,/**/"#ff5733");
       let object3 = ObjectService.circle(1,32,null, null,/**/);
+
       let objects = [];
       objects.push(object1);
       //objects.push(object2);
@@ -85,6 +88,9 @@ export default {
       return objects;
     },
     createModels() {
+      this.createTruck();
+    },
+    loadModels() {
       let models = [];
       models.push("skull.gltf");
       return models;
@@ -111,20 +117,40 @@ export default {
         LoaderService.addModelToScene(model, scene)
       });
     },
-    startAnimation : function (scene, object) {
+    startAnimation : function (scene, objects) {
       let that=this;
       const animate = () => {
         requestAnimationFrame(animate);
-
         // Optional rotation for the cube
-        object.rotation.x += 0.01;
-        object.rotation.y += 0.01;
-
+        objects.forEach((object) => {
+          object.rotation.x += 0.01;
+          object.rotation.y += 0.01;
+        });
         // Render the scene
         that.renderer.render(scene, that.camera);
       };
       animate();
-    }
+    },
+    createTruck(){
+      let objects = [];
+      objects.push(this.createCabin());
+      objects.push(this.createPlateau());
+      return objects;
+    },
+    createCabin(){
+      const cabinGeometry = new THREE.BoxGeometry(2, 2, 2); // L x H x P
+      const cabinMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 });
+      const cabin = new THREE.Mesh(cabinGeometry, cabinMaterial);
+      cabin.position.set(-2, 1, 0); // Position de la cabine;
+      return cabin;
+    },
+    createPlateau(){
+      const trailerGeometry = new THREE.BoxGeometry(6, 0.5, 2); // L x H x P
+      const trailerMaterial = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
+      const trailer = new THREE.Mesh(trailerGeometry, trailerMaterial);
+      trailer.position.set(1, 0.25, 0);
+      return trailer;
+    },
   },
   mounted() {
     this.launchPlayGround();
