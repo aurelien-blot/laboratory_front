@@ -45,13 +45,33 @@ export default {
           z: 5
         }
       },
+      customTrailerDimensions: {
+        width: 2450,
+        depth: 13400
+      },
       controls: null,
       objects: [],
-      trailerDimensions: {
-        width: 2450,
-        height: 2600,
-        depth: 13400,
+      truckDatas :{
+        ground:{
+          depth: 1
+        },
+        wheels:{
+          radius: 0.5,
+          width: 0.3
+        },
+        cabin: {
+          width: 2.5,
+          height: 2.6,
+          depth: 1
+        },
+        trailerDimensions: {
+          width: null,
+          height: 0.3,
+          depth: null,
+        },
+        pallets: []
       }
+
     }
   },
   computed: {
@@ -133,9 +153,9 @@ export default {
           0.1,
           1000
       );
-      this.camera.position.x = this.cameraSettings.position.x;
-      this.camera.position.y = this.cameraSettings.position.y;
-      this.camera.position.z = this.cameraSettings.position.z;
+      this.camera.position.x = this.cameraSettings.position.x-8;
+      this.camera.position.y = this.cameraSettings.position.y+4;
+      this.camera.position.z = this.cameraSettings.position.z+5;
       this.camera.lookAt(0, 0, 0);
 
     },
@@ -164,72 +184,68 @@ export default {
       animate();
     },
     createTruck() {
+      this.truckDatas.trailerDimensions.width = this.customTrailerDimensions.width/1000;
+      this.truckDatas.trailerDimensions.depth = this.customTrailerDimensions.depth/1000;
+      this.truckDatas.cabin.width = this.truckDatas.trailerDimensions.width;
       const truck = new THREE.Group();
 
       const cabin = this.createCabin();
       const trailer = this.createTrailer();
       const wheels = this.createWheels();
 
-      // Ajustement de la position pour qu'ils soient collés
-      cabin.position.set(-7, 1.8, 0);  // La cabine se déplace vers le centre
-      trailer.position.set(1.5, 0.6, 0); // Trailer aligné
       truck.add(cabin);
       truck.add(trailer);
       wheels.forEach(wheel => truck.add(wheel));
+
+      this.loadPallets(truck);
       return [truck];
     },
     createCabin() {
-      const width = 2.5; // Largeur cabine en mètres
-      const height = 2.6; // Hauteur cabine en mètres
-      const depth =this.trailerDimensions.width/1000; // Profondeur cabine en mètres
+      const width = this.truckDatas.cabin.width; // Largeur cabine en mètres
+      const height = this.truckDatas.cabin.height; // Hauteur cabine en mètres
+      const depth =this.truckDatas.trailerDimensions.width; // Profondeur cabine en mètres
       const geometry = new THREE.BoxGeometry(width, height, depth);
-      //const geometry = new THREE.BoxGeometry(2, 2, this.trailerDimensions.width/1000);
       const material = new THREE.MeshPhongMaterial({color: "#9060BF", shininess: 80});
       const cabin = new THREE.Mesh(geometry, material);
+
+      let positionX= ((this.truckDatas.trailerDimensions.depth)*-0.5) -(depth/2);
+      let positionY= (this.truckDatas.wheels.radius*2+(height/2));
+      cabin.position.set(positionX, positionY);  // La cabine se déplace vers le centre
       return cabin;
     },
-
     createTrailer() {
-      const width = this.trailerDimensions.width / 1000;  // Largeur en mètres
-      const height = 0.3; // Hauteur du plateau en mètres
-      const depth = this.trailerDimensions.depth / 1000;  // Longueur en mètres
+      const width = this.truckDatas.trailerDimensions.width ;  // Largeur en mètres
+      const height = this.truckDatas.trailerDimensions.height ; // Hauteur du plateau en mètres
+      const depth = this.truckDatas.trailerDimensions.depth ;  // Longueur en mètres
 
       const geometry = new THREE.BoxGeometry(depth, height, width);
       const material = new THREE.MeshPhongMaterial({color: 0x00ff00, shininess: 50});
       const trailer = new THREE.Mesh(geometry, material);
+      trailer.position.set(0, this.truckDatas.wheels.radius*2+(height/2), 0); // Trailer aligné
       return trailer;
     },
-
     createWheels() {
       const wheels = [];
-      const radius = 0.5; // Rayon roue en mètres (500 mm)
-      const width = 0.3; // Largeur roue en mètres (300 mm)
+      const radius = this.truckDatas.wheels.radius;
+      const width = this.truckDatas.wheels.width;
       const wheelGeometry = new THREE.CylinderGeometry(radius, radius, width, 32);
       const wheelMaterial = new THREE.MeshPhongMaterial({color: 0x222222, shininess: 10});
 
-      /*const positions = [
-        [-3, 0, 1], // Cabine Avant gauche
-        [-3, 0, -1], //Cabine Avant droit
-        [-2, 0, 1], //Cabine Arrière gauche
-        [-2, 0, -1], //Cabine Arrière droit
-        [-0.5, 0, 1], //Trailer Avant gauche
-        [-0.5, 0, -1], //Trailer Avant droit
-        [2.2, 0, 1], //Trailer milieu gauche
-        [2.2, 0, -1], //Trailer milieu droit
-        [3.3, 0, 1], //Trailer Arrière gauche
-        [3.3, 0, -1], //Trailer Arrière droit
-      ];*/
+      //let wheelsYPosition = this.truckDatas.wheels.radius + (this.truckDatas.ground.depth / 2);
+      let wheelsYPosition = this.truckDatas.wheels.radius;
+      let wheelsZPosition = 1.2;
+      let cabinX = ((this.truckDatas.trailerDimensions.depth )*-0.5) ;
       const positions = [
-        [-3, 0, 1.2], // Cabine Avant gauche
-        [-3, 0, -1.2], // Cabine Avant droit
-        [-2, 0, 1.2], // Cabine Arrière gauche
-        [-2, 0, -1.2], // Cabine Arrière droit
-        [0, 0, 1.2], // Milieu Avant gauche du plateau
-        [0, 0, -1.2], // Milieu Avant droit du plateau
-        [5, 0, 1.2], // Milieu Arrière gauche du plateau
-        [5, 0, -1.2], // Milieu Arrière droit du plateau
-        [6.5, 0, 1.2], // Arrière gauche du plateau
-        [6.5, 0, -1.2], // Arrière droit du plateau
+        [cabinX-1.8, wheelsYPosition, wheelsZPosition], // Cabine Avant gauche
+        [cabinX-1.8, wheelsYPosition, -wheelsZPosition], // Cabine Avant droit
+        [cabinX-0.6, wheelsYPosition, wheelsZPosition], // Cabine Arrière gauche
+        [cabinX-0.6, wheelsYPosition, -wheelsZPosition], // Cabine Arrière droit
+        [cabinX+1.4, wheelsYPosition, wheelsZPosition], // Milieu Avant gauche du plateau
+        [cabinX+1.4, wheelsYPosition, -wheelsZPosition], // Milieu Avant droit du plateau
+        [cabinX+8.2, wheelsYPosition, wheelsZPosition], // Milieu Arrière gauche du plateau
+        [cabinX+8.2, wheelsYPosition, -wheelsZPosition], // Milieu Arrière droit du plateau
+        [cabinX+9.2, wheelsYPosition, wheelsZPosition], // Arrière gauche du plateau
+        [cabinX+9.2, wheelsYPosition, -wheelsZPosition], // Arrière droit du plateau
       ];
 
       positions.forEach(([x, y, z]) => {
@@ -241,15 +257,21 @@ export default {
 
       return wheels;
     },
-
     createGround(scene) {
-      const groundGeometry = new THREE.PlaneGeometry(20, 20);
+      let groundDepth = this.truckDatas.ground.depth;
+      const groundGeometry = new THREE.BoxGeometry(30, 30, groundDepth);
       const groundMaterial = new THREE.MeshStandardMaterial({color: 0x777777});
       const ground = new THREE.Mesh(groundGeometry, groundMaterial);
       ground.rotation.x = -Math.PI / 2;
-      ground.position.y = 0;
+      ground.position.y = -1*groundDepth/2;
       scene.add(ground);
     },
+    loadPallets(truck) {
+      const pallets = this.truckDatas.pallets;
+      pallets.forEach((pallet) => {
+        truck.add(pallet);
+      });
+    }
   }
   ,
   mounted() {
