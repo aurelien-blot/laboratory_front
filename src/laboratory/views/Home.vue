@@ -52,6 +52,11 @@ export default {
           name: "Quick Mail",
           link: "/quick-mail",
           needConnection: true
+        },
+        {
+          name: "Fake Profile",
+          link: "/fake-profile",
+          needConnection: true
         }
       ],
       isConnectedToApi: false,
