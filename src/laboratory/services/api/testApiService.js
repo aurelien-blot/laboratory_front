@@ -6,7 +6,7 @@ export default class TestApiService {
     static servicePath = '/test';
 
     static async testConnection(timeout=null) {
-        return await ApiService.get(`${this.servicePath}`, timeout);
+        return await ApiService.get(`${this.servicePath}`, null, timeout);
     }
 
 }

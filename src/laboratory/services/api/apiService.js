@@ -3,13 +3,14 @@ export default class ApiService {
 
     static baseUrl = import.meta.env.VITE_APP_API_URL + '/api';
 
-    static async get(endpoint, timeout=null) {
+    static async get(endpoint, params={},timeout=null) {
         let headers = ApiService.extractHeaders();
         let content = {};
         content.headers = headers;
         if(null !== timeout) {
             content.timeout = timeout;
         }
+        content.params =params;
         try {
             const response = await axios.get(`${ApiService.baseUrl}${endpoint}`, content);
             return response.data;
