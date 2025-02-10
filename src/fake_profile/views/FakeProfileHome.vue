@@ -8,7 +8,11 @@
       </div>
       <div class="row">
         <div class="col-6">
-          <button class="btn btn-primary" @click="generate">Générer</button>
+          <div class="row">
+            <button class="col-2 btn btn-primary" @click="generate">Générer</button>
+          </div>
+          <ImageTypeComponent></ImageTypeComponent>
+
         </div>
         <div class="col-6">
           <table class="table table-striped table-bordered table-sm">
@@ -41,21 +45,24 @@
 
 import {mapActions, mapGetters} from "vuex";
 import BasicViewComponent from "@/laboratory/components/BasicViewComponent.vue";
-import FakeProfileApiservice from "@/fake_profile/services/api/fakeProfileApiservice.js";
 import StableDiffusionApiService from "@/fake_profile/services/api/stableDiffusionApiService.js";
 import ErrorService from "@/laboratory/services/errorService.js";
 import GeneratedImageApiService from "@/fake_profile/services/api/generatedImageApiService.js";
+import ImageTypeComponent from "@/fake_profile/components/ImageTypeComponent.vue";
 
 export default {
   name: 'FakeProfileHome',
   components: {
+    ImageTypeComponent,
     BasicViewComponent
   },
   data() {
     return {
       request :{
       },
-      generatedImageList: []
+      generatedImageList: [],
+
+      modelList: [],
     }
   },
   computed: {
