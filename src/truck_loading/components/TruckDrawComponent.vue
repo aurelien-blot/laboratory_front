@@ -56,6 +56,7 @@ export default {
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       // Dessiner les limites du camion
 
+      console.log(this.loadingList)
       // Dessiner chaque palette
       this.loadingList.forEach((layer) => {
           layer.columns.forEach((column) => {
@@ -64,7 +65,7 @@ export default {
               const y = palette.y / this.reductionFactor; // Position verticale
               const width = palette.width / this.reductionFactor; // Largeur palette
               const height = palette.depth / this.reductionFactor; // Profondeur palette
-
+              console.log({"x" : x, "y" : y, "width" : width, "height" : height, "depth" : palette.depth});
               // Dessiner la palette
               //ctx.fillStyle = "rgba(0, 120, 255, 0.7)";
               ctx.fillStyle = ColorService.generateRandomColor();

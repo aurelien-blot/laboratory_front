@@ -26,6 +26,7 @@ import * as THREE from "three";
 import ObjectService from "@/3d_playground/services/objectService.js";
 import LoaderService from "@/3d_playground/services/LoaderService.js";
 import {OrbitControls} from "three/addons";
+import ColorService from "@/laboratory/services/colorService.js";
 
 export default {
   name: 'PlaygroundHome',
@@ -69,8 +70,266 @@ export default {
           height: 0.3,
           depth: null,
         },
-        pallets: []
-      }
+        pallets:
+         /* [
+            {
+              "depthUsed": 2500,
+              "widthUsed": 2050,
+              "columns": [
+                [
+                  {
+                    "number": 1,
+                    "width": 850,
+                    "depth": 2500,
+                    "height": 1100,
+                    "x": 0,
+                    "y": 0
+                  }
+                ],
+                [
+                  {
+                    "number": 3,
+                    "width": 1200,
+                    "depth": 1000,
+                    "height": 1700,
+                    "x": 850,
+                    "y": 0
+                  },
+                  {
+                    "number": 17,
+                    "width": 1300,
+                    "depth": 800,
+                    "height": 1100,
+                    "x": 850,
+                    "y": 1000
+                  }
+                ]
+              ]
+            },
+            {
+              "depthUsed": 1000,
+              "widthUsed": 2200,
+              "columns": [
+                [
+                  {
+                    "number": 19,
+                    "width": 500,
+                    "depth": 1000,
+                    "height": 900,
+                    "x": 0,
+                    "y": 2500
+                  }
+                ],
+                [
+                  {
+                    "number": 20,
+                    "width": 500,
+                    "depth": 1000,
+                    "height": 900,
+                    "x": 500,
+                    "y": 2500
+                  }
+                ],
+                [
+                  {
+                    "number": 2,
+                    "width": 1200,
+                    "depth": 800,
+                    "height": 800,
+                    "x": 1000,
+                    "y": 2500
+                  }
+                ]
+              ]
+            },
+            {
+              "depthUsed": 800,
+              "widthUsed": 2400,
+              "columns": [
+                [
+                  {
+                    "number": 4,
+                    "width": 1200,
+                    "depth": 800,
+                    "height": 970,
+                    "x": 0,
+                    "y": 3500
+                  }
+                ],
+                [
+                  {
+                    "number": 5,
+                    "width": 1200,
+                    "depth": 800,
+                    "height": 1500,
+                    "x": 1200,
+                    "y": 3500
+                  }
+                ]
+              ]
+            },
+            {
+              "depthUsed": 800,
+              "widthUsed": 2400,
+              "columns": [
+                [
+                  {
+                    "number": 6,
+                    "width": 1200,
+                    "depth": 800,
+                    "height": 1550,
+                    "x": 0,
+                    "y": 4300
+                  }
+                ],
+                [
+                  {
+                    "number": 7,
+                    "width": 1200,
+                    "depth": 800,
+                    "height": 1940,
+                    "x": 1200,
+                    "y": 4300
+                  }
+                ]
+              ]
+            },
+            {
+              "depthUsed": 800,
+              "widthUsed": 2400,
+              "columns": [
+                [
+                  {
+                    "number": 8,
+                    "width": 1200,
+                    "depth": 800,
+                    "height": 1620,
+                    "x": 0,
+                    "y": 5100
+                  }
+                ],
+                [
+                  {
+                    "number": 9,
+                    "width": 1200,
+                    "depth": 800,
+                    "height": 1920,
+                    "x": 1200,
+                    "y": 5100
+                  }
+                ]
+              ]
+            },
+            {
+              "depthUsed": 800,
+              "widthUsed": 2400,
+              "columns": [
+                [
+                  {
+                    "number": 10,
+                    "width": 1200,
+                    "depth": 800,
+                    "height": 1630,
+                    "x": 0,
+                    "y": 5900
+                  }
+                ],
+                [
+                  {
+                    "number": 11,
+                    "width": 1200,
+                    "depth": 800,
+                    "height": 1750,
+                    "x": 1200,
+                    "y": 5900
+                  }
+                ]
+              ]
+            },
+            {
+              "depthUsed": 800,
+              "widthUsed": 2400,
+              "columns": [
+                [
+                  {
+                    "number": 12,
+                    "width": 1200,
+                    "depth": 800,
+                    "height": 2230,
+                    "x": 0,
+                    "y": 6700
+                  }
+                ],
+                [
+                  {
+                    "number": 13,
+                    "width": 1200,
+                    "depth": 800,
+                    "height": 1750,
+                    "x": 1200,
+                    "y": 6700
+                  }
+                ]
+              ]
+            },
+            {
+              "depthUsed": 800,
+              "widthUsed": 2400,
+              "columns": [
+                [
+                  {
+                    "number": 14,
+                    "width": 1200,
+                    "depth": 800,
+                    "height": 1750,
+                    "x": 0,
+                    "y": 7500
+                  }
+                ],
+                [
+                  {
+                    "number": 15,
+                    "width": 1200,
+                    "depth": 800,
+                    "height": 920,
+                    "x": 1200,
+                    "y": 7500
+                  }
+                ]
+              ]
+            },
+            {
+              "depthUsed": 800,
+              "widthUsed": 2400,
+              "columns": [
+                [
+                  {
+                    "number": 16,
+                    "width": 1200,
+                    "depth": 800,
+                    "height": 920,
+                    "x": 0,
+                    "y": 8300
+                  }
+                ],
+                [
+                  {
+                    "number": 18,
+                    "width": 1200,
+                    "depth": 800,
+                    "height": 500,
+                    "x": 1200,
+                    "y": 8300
+                  }
+                ]
+              ]
+            }
+          ]*/
+            [
+              {x: 0, y: 0, width: 42.5, height: 125, depth: 2500},
+              {x: 42.5, y: 0, width: 60, height: 50, depth: 1000},
+            ]
+        }
 
     }
   },
@@ -192,12 +451,12 @@ export default {
       const cabin = this.createCabin();
       const trailer = this.createTrailer();
       const wheels = this.createWheels();
+      const pallets = this.createPallets(trailer);
 
       truck.add(cabin);
       truck.add(trailer);
       wheels.forEach(wheel => truck.add(wheel));
-
-      this.loadPallets(truck);
+      pallets.forEach(pallet => truck.add(pallet));
       return [truck];
     },
     createCabin() {
@@ -257,6 +516,46 @@ export default {
 
       return wheels;
     },
+    createPallets(trailer){
+      const pallets = [];
+      let palletTreatmentList =[]
+      /*this.truckDatas.pallets.forEach((pallet) => {
+        pallet.columns.forEach((column) => {
+          column.forEach((pallet) => {
+            palletTreatmentList.push(pallet);
+          });
+        });
+      });*/
+      palletTreatmentList=[...this.truckDatas.pallets]
+      palletTreatmentList.forEach((pallet) => {
+        const palletMaterial = new THREE.MeshPhongMaterial({color: ColorService.generateRandomColor(), shininess: 50});
+
+        let width =pallet.width/100;// 0.425//
+        let height = pallet.height/100;//1.25//
+        let depth = pallet.depth/1000;
+        let x = pallet.x/1000;
+        let y = pallet.y/1000;
+
+        let xStart = (this.truckDatas.trailerDimensions.depth / -2) ;
+        let zStart = this.truckDatas.trailerDimensions.width/2 ;
+        let floorY = trailer.position.y + (this.truckDatas.trailerDimensions.height/2) + height/2;
+        let calculatedX = xStart+ x + (depth/2);
+        let calculatedY = floorY+y;
+        let calculatedZ = zStart- width/ 2;
+        if(pallets.length>0){
+          console.log(pallets[pallets.length-1])
+          let lastPalette = pallets[pallets.length-1];
+          calculatedZ = lastPalette.position.z -lastPalette.geometry.parameters.depth;
+        }
+
+        const geometry = new THREE.BoxGeometry(depth, height, width);
+        const palletMesh = new THREE.Mesh(geometry, palletMaterial);
+        palletMesh.position.set(calculatedX, calculatedY, calculatedZ);
+        pallets.push(palletMesh);
+
+      });
+      return pallets;
+    },
     createGround(scene) {
       let groundDepth = this.truckDatas.ground.depth;
       const groundGeometry = new THREE.BoxGeometry(30, 30, groundDepth);
@@ -266,12 +565,6 @@ export default {
       ground.position.y = -1*groundDepth/2;
       scene.add(ground);
     },
-    loadPallets(truck) {
-      const pallets = this.truckDatas.pallets;
-      pallets.forEach((pallet) => {
-        truck.add(pallet);
-      });
-    }
   }
   ,
   mounted() {
