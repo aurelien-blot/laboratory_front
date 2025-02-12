@@ -8,11 +8,12 @@
       </div>
       <div class="row">
         <div class="col-6">
+
+          <ImageTypeComponent></ImageTypeComponent>
+          <ModelComponent></ModelComponent>
           <div class="row">
             <button class="col-2 btn btn-primary" @click="generate">Générer</button>
           </div>
-          <ImageTypeComponent></ImageTypeComponent>
-
         </div>
         <div class="col-6">
           <table class="table table-striped table-bordered table-sm">
@@ -49,10 +50,12 @@ import StableDiffusionApiService from "@/fake_profile/services/api/stableDiffusi
 import ErrorService from "@/laboratory/services/errorService.js";
 import GeneratedImageApiService from "@/fake_profile/services/api/generatedImageApiService.js";
 import ImageTypeComponent from "@/fake_profile/components/ImageTypeComponent.vue";
+import ModelComponent from "@/fake_profile/components/ModelComponent.vue";
 
 export default {
   name: 'FakeProfileHome',
   components: {
+    ModelComponent,
     ImageTypeComponent,
     BasicViewComponent
   },
@@ -61,8 +64,6 @@ export default {
       request :{
       },
       generatedImageList: [],
-
-      modelList: [],
     }
   },
   computed: {
