@@ -2,7 +2,7 @@
 <template>
   <LoadingComponent/>
 
-  <div class="container">
+  <div class="container-fluid">
     <slot name="content"></slot>
   </div>
 </template>

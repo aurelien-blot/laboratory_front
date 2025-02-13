@@ -8,4 +8,16 @@ export default class ImageTypeApiService {
     static async selectAll() {
         return await ApiService.get(`${this.servicePath}`);
     }
+
+    static async create(imageType){
+        return await ApiService.post(`${this.servicePath}`, imageType);
+    }
+
+    static async update(imageType) {
+        return await ApiService.put(`${this.servicePath}`, imageType);
+    }
+
+    static async delete(id) {
+        return await ApiService.delete(`${this.servicePath}`+'/'+id);
+    }
 }

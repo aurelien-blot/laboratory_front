@@ -5,7 +5,9 @@ export default class StableDiffusionApiService {
 
     static servicePath = FakeProfileApiservice.getBaseUrl('/stable-diffusion');
 
-    static async generate(data) {
-        return await ApiService.post(`${this.servicePath}`, data);
+    static async generate(data, templateTitle) {
+        const queryParams = new URLSearchParams({ templateTitle }).toString();
+        const url = `${this.servicePath}?${queryParams}`;
+        return await ApiService.post(url, data);
     }
 }

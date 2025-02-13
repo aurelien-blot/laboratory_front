@@ -9,5 +9,17 @@ export default class ModelApiService {
         return await ApiService.get(`${this.servicePath}`);
     }
 
+    static async create(model) {
+        return await ApiService.post(`${this.servicePath}`, model);
+    }
+
+    static async update(model) {
+        return await ApiService.put(`${this.servicePath}`, model);
+    }
+
+    static async delete(id) {
+        return await ApiService.delete(`${this.servicePath}`+'/'+id);
+    }
+
 
 }
