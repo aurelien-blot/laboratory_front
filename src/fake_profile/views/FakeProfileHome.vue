@@ -23,13 +23,13 @@
             </div>
           </div>
           <ModelComponent
-                          @update:isValid="isModelValid = $event"
-                          @update:entity="request.model = $event"
+              @update:isValid="isModelValid = $event"
+              @update:entity="request.model = $event"
 
           />
           <ImageTypeComponent
-                              @update:isValid="isImageTypeValid = $event"
-                              @update:entity="request.imageType = $event"
+              @update:isValid="isImageTypeValid = $event"
+              @update:entity="request.imageType = $event"
           />
         </div>
         <div class="col-lg-6 col-md-12 mb-3">
@@ -40,6 +40,7 @@
               <th>Lien</th>
               <th>Seed</th>
               <th>Subseed</th>
+              <th class="text-center"><i class="fas fa-trash"></i></th>
             </tr>
             </thead>
             <tbody>
@@ -48,6 +49,11 @@
               <td @click="showPicture(index)" class="hover">{{ generatedImage.fileName }}</td>
               <td>{{ generatedImage.seedUsed }}</td>
               <td>{{ generatedImage.subseedUsed }}</td>
+              <td class="text-center">
+                <button class="btn btn-danger btn-sm" @click="deleteGeneratedImage(generatedImage.id)">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </td>
             </tr>
             </tbody>
           </table>
@@ -56,12 +62,14 @@
 
 
     </template>
-    <div id="popup" class="picturePreview" v-if="showPictureModal">
-      <img id="picturePreviewImage" :src="viewedPicture" alt="Image Popup" v-if="viewedPicture!=null">
-    </div>
   </BasicViewComponent>
 
-  <FullScreenPictureModalComponent v-if="showPictureModal "  title="Aperçu de l'image" :on-close="hidePictureModal" :picture="viewedPicture"/>
+  <FullScreenPictureModalComponent v-if="showPictureModal " title="Aperçu de l'image"
+                                   :picture-list="generatedImageList"
+                                   :index-init="viewedPictureIndex"
+                                   loading-key="id"
+                                   :on-close="hidePictureModal"
+                                   :loading-method="loadPicture"/>
 
 </template>
 
@@ -114,7 +122,6 @@ export default {
       },
       showPictureModal: false,
       viewedPictureIndex: null,
-      viewedPicture: null,
     }
   },
   computed: {
@@ -125,16 +132,27 @@ export default {
           return false;
         }
       }
-      return this.request.imageType!=null && this.request.model!=null && this.isModelValid && this.isImageTypeValid;
+      return this.request.imageType != null && this.request.model != null && this.isModelValid && this.isImageTypeValid;
     },
   },
-  watch: {},
+  watch: {
+    //watcher pour request.model.name, on recharge la liste des images générées
+    'request.model.name': function (newVal, oldVal) {
+      if(newVal !== oldVal){
+        if(this.request.model==null || this.request.model.id!=null){
+          this.loadGeneratedImageList();
+        }
+        else{
+          this.generatedImageList = [];
+        }
+      }
+    }
+  },
   methods: {
     ...mapActions(['setLoading']),
     async generate() {
       let that = this;
-      let request= this.formatForRequest();
-      console.log(request)
+      let request = this.formatForRequest();
       this.setLoading(true);
       await StableDiffusionApiService.generate(request, that.request.model.name).then(() => {
         that.loadGeneratedImageList();
@@ -145,36 +163,43 @@ export default {
     },
     formatForRequest() {
       return {
-        prompt : this.request.model.prompt,
-        negative_prompt : this.request.model.negativePrompt,
-        seed : this.request.imageType.seed,
-        subseed : this.request.imageType.subseed,
-        subseed_strength : this.request.imageType.subseedStrength,
-        width : this.request.imageType.width,
-        height : this.request.imageType.height,
-        sampler_name : this.request.imageType.samplerName,
-        cfg_scale : this.request.imageType.cfgScale,
-        steps : this.request.imageType.steps,
-        batch_count : this.request.batchCount,
-        batch_size : this.request.batchSize,
-        restore_faces : this.request.imageType.restoreFaces,
-        face_restoration_model : this.request.imageType.faceRestorationModel,
-        sd_model_checkpoint : this.request.imageType.sdModelCheckpoint,
-        denoising_strength : this.request.imageType.denoisingStrength,
-        override_settings : {
-          sd_model_checkpoint : this.request.imageType.sdModelCheckpoint
+        prompt: this.request.model.prompt,
+        negative_prompt: this.request.model.negativePrompt,
+        seed: this.request.imageType.seed,
+        subseed: this.request.imageType.subseed,
+        subseed_strength: this.request.imageType.subseedStrength,
+        width: this.request.imageType.width,
+        height: this.request.imageType.height,
+        sampler_name: this.request.imageType.samplerName,
+        cfg_scale: this.request.imageType.cfgScale,
+        steps: this.request.imageType.steps,
+        batch_count: this.request.batchCount,
+        batch_size: this.request.batchSize,
+        restore_faces: this.request.imageType.restoreFaces,
+        face_restoration_model: this.request.imageType.faceRestorationModel,
+        sd_model_checkpoint: this.request.imageType.sdModelCheckpoint,
+        denoising_strength: this.request.imageType.denoisingStrength,
+        override_settings: {
+          sd_model_checkpoint: this.request.imageType.sdModelCheckpoint
         },
-        extra_generation_params :{
-          "Schedule type" :"Karras"
+        extra_generation_params: {
+          "Schedule type": "Karras"
         }
       }
     },
     async loadGeneratedImageList() {
       let that = this;
+      let templateTitle = null;
+      if(this.request.model!=null && this.request.model.id!=null){
+        templateTitle = this.request.model.name;
+      }
       this.setLoading(true);
-      await GeneratedImageApiService.selectAll().then((results) => {
+      await GeneratedImageApiService.selectAll(templateTitle).then((results) => {
         that.generatedImageList = results;
-        console.log(results);
+        //Tri par creationTime desc
+        that.generatedImageList.sort((a, b) => {
+          return new Date(b.creationTime) - new Date(a.creationTime);
+        });
       }).catch((error) => {
         ErrorService.showErrorInAlert(error);
       });
@@ -183,16 +208,36 @@ export default {
     async showPicture(generatedImageIndex) {
       this.viewedPictureIndex = generatedImageIndex;
       this.setLoading(true);
-      let picture = await GeneratedImageApiService.loadPicture(this.generatedImageList[this.viewedPictureIndex].id);
-      this.viewedPicture =  `data:image/png;base64,${picture.base64Image}`;
       this.showPictureModal = true;
       this.setLoading(false);
+    },
+    async loadPicture(id) {
+      let picture = await GeneratedImageApiService.loadPicture(id);
+      let currentPicture = this.generatedImageList.find((element) => element.id === id);
+      if(!currentPicture){
+        ErrorService.showErrorInAlert("Impossible de trouver l'image");
+      }
+      let title = currentPicture.templateTitle + " : " + currentPicture.fileName + " - Seed : " + currentPicture.seedUsed + " - Subseed : " + currentPicture.subseedUsed;
+
+      return {
+        title: title,
+        base64: `data:image/png;base64,${picture.base64Image}`,
+      };
     },
     hidePictureModal() {
       this.showPictureModal = false;
       this.viewedPictureIndex = null;
-      this.viewedPicture = null;
     },
+    async deleteGeneratedImage(id) {
+      let that = this;
+      this.setLoading(true);
+      await GeneratedImageApiService.delete(id).then(() => {
+        that.loadGeneratedImageList();
+      }).catch((error) => {
+        ErrorService.showErrorInAlert(error);
+      });
+      this.setLoading(false);
+    }
 
   }
   ,

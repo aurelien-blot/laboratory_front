@@ -17,4 +17,8 @@ export default class GeneratedImageApiService {
     static async loadPicture(id) {
         return await ApiService.get(`${this.servicePath}`+'/load/'+id);
     }
+
+    static async delete(id) {
+        return await ApiService.delete(`${this.servicePath}`+'/'+id);
+    }
 }
