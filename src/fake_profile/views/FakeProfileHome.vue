@@ -45,9 +45,9 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(generatedImage, index) in generatedImageList" :key="generatedImage.id">
+            <tr v-for="(generatedImage, index) in chronoGeneratedImageList" :key="generatedImage.id">
               <td>{{ generatedImage.templateTitle }}</td>
-              <td @click="showPicture(index)" class="hover">{{ generatedImage.fileName }}</td>
+              <td @click="showPicture(generatedImage.id)" class="hover">{{ generatedImage.fileName }}</td>
               <td>{{ generatedImage.seedUsed }}</td>
               <td>{{ generatedImage.subseedUsed }}</td>
               <td class="text-center">
@@ -137,6 +137,11 @@ export default {
       }
       return this.request.imageType != null && this.request.model != null && this.isModelValid && this.isImageTypeValid;
     },
+    chronoGeneratedImageList(){
+      return [...this.generatedImageList].sort((a, b) => {
+        return new Date(b.creationTime) - new Date(a.creationTime);
+      });
+    }
   },
   watch: {
     //watcher pour request.model.name, on recharge la liste des images générées
@@ -198,17 +203,13 @@ export default {
       this.setLoading(true);
       await GeneratedImageApiService.selectAll(templateTitle).then((results) => {
         that.generatedImageList = results;
-        //Tri par creationTime desc
-        that.generatedImageList.sort((a, b) => {
-          return new Date(b.creationTime) - new Date(a.creationTime);
-        });
       }).catch((error) => {
         ErrorService.showErrorInAlert(error);
       });
       this.setLoading(false);
     },
-    async showPicture(generatedImageIndex) {
-      this.viewedPictureIndex = generatedImageIndex;
+    async showPicture(id) {
+      this.viewedPictureIndex = this.generatedImageList.findIndex((element) => element.id === id);
       this.setLoading(true);
       this.showPictureModal = true;
       this.setLoading(false);
@@ -241,8 +242,7 @@ export default {
       this.setLoading(false);
     }
 
-  }
-  ,
+  },
   mounted() {
     this.loadGeneratedImageList();
   }
