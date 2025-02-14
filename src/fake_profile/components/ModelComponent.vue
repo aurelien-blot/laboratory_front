@@ -7,7 +7,7 @@
     </div>
     <div class="row" v-if="selectedModel==null || !isNewItem">
       <div class="col-2 ">
-        <button class="btn btn-primary btn-sm" @click="create">Nouveau</button>
+        <button class="btn btn-primary btn-sm" @click="create"><i class="fas fa-plus"></i></button>
       </div>
       <div class="col-4">
         <v-select density="compact"
@@ -21,7 +21,10 @@
         ></v-select>
       </div>
       <div class="col-1" v-if="selectedModel!=null && !isNewItem">
-        <button class="btn btn-danger btn-sm" @click="deleteModel">Supprimer</button>
+        <button class="btn btn-primary btn-sm" @click="copyModel"><i class="fas fa-copy"></i></button>
+      </div>
+      <div class="col-1" v-if="selectedModel!=null && !isNewItem">
+        <button class="btn btn-danger btn-sm" @click="deleteModel"><i class="fas fa-trash"></i></button>
       </div>
     </div>
     <template v-if="selectedModel!=null">
@@ -185,6 +188,10 @@ export default {
     },
     deleteModel() {
       this.showDeleteModal = true;
+    },
+    copyModel() {
+      this.selectedModel = Object.assign({}, this.selectedModel);
+      this.selectedModel.id = null;
     },
     async onDeleteModel() {
       let that = this;

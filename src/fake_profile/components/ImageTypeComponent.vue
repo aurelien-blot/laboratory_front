@@ -7,7 +7,7 @@
     </div>
     <div class="row" v-if="selectedImageType==null || !isNewItem">
       <div class="col-2 ">
-        <button class="btn btn-primary btn-sm" @click="create">Nouveau</button>
+        <button class="btn btn-primary btn-sm" @click="create"><i class="fas fa-plus"></i></button>
       </div>
       <div class="col-4">
         <v-select density="compact"
@@ -21,7 +21,10 @@
         ></v-select>
       </div>
       <div class="col-1" v-if="selectedImageType!=null && !isNewItem">
-        <button class="btn btn-danger btn-sm" @click="deleteImageType">Supprimer</button>
+        <button class="btn btn-primary btn-sm" @click="copyImageType"><i class="fas fa-copy"></i></button>
+      </div>
+      <div class="col-1" v-if="selectedImageType!=null && !isNewItem">
+        <button class="btn btn-danger btn-sm" @click="deleteImageType"><i class="fas fa-trash"></i></button>
       </div>
     </div>
     <template v-if="selectedImageType!=null">
@@ -254,6 +257,10 @@ export default {
     },
     deleteImageType() {
       this.showDeleteModal = true;
+    },
+    copyImageType() {
+      this.selectedImageType = Object.assign({}, this.selectedImageType);
+      this.selectedImageType.id = null;
     },
     async onDeleteImageType() {
       let that = this;
