@@ -28,50 +28,51 @@
       </div>
     </div>
     <template v-if="selectedImageType!=null">
-      <div class="row">
-        <div class="col-3">
-          <FieldComponent :field="fields.name" v-model="selectedImageType.name" :disabled="!isNewItem"
-                          :show-error="isNewItem"/>
+      <Form novalidate @submit.prevent="save">
+        <div class="row">
+          <div class="col-3">
+            <FieldComponent :field="fields.name" v-model="selectedImageType.name" :disabled="!isNewItem"
+                            :show-error="isNewItem"/>
+          </div>
+          <div class=" col-9">
+            <FieldComponent :field="fields.description" v-model="selectedImageType.description"/>
+          </div>
         </div>
-        <div class=" col-9">
-          <FieldComponent :field="fields.description" v-model="selectedImageType.description"/>
+        <div class="row">
+          <div class=" col-4">
+            <FieldComponent :field="fields.samplerName" v-model="selectedImageType.samplerName"/>
+          </div>
+          <div class=" col-8">
+            <FieldComponent :field="fields.sdModelCheckpoint" v-model="selectedImageType.sdModelCheckpoint"/>
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class=" col-4">
-          <FieldComponent :field="fields.samplerName" v-model="selectedImageType.samplerName"/>
+        <div class="row">
+          <div class=" col-3">
+            <FieldComponent :field="fields.width" v-model="selectedImageType.width"/>
+          </div>
+          <div class=" col-3">
+            <FieldComponent :field="fields.height" v-model="selectedImageType.height"/>
+          </div>
+          <div class=" col-3">
+            <FieldComponent :field="fields.cfgScale" v-model="selectedImageType.cfgScale"/>
+          </div>
+          <div class=" col-3">
+            <FieldComponent :field="fields.steps" v-model="selectedImageType.steps"/>
+          </div>
         </div>
-        <div class=" col-8">
-          <FieldComponent :field="fields.sdModelCheckpoint" v-model="selectedImageType.sdModelCheckpoint"/>
-        </div>
-      </div>
-      <div class="row">
-        <div class=" col-3">
-          <FieldComponent :field="fields.width" v-model="selectedImageType.width"/>
-        </div>
-        <div class=" col-3">
-          <FieldComponent :field="fields.height" v-model="selectedImageType.height"/>
-        </div>
-        <div class=" col-3">
-          <FieldComponent :field="fields.cfgScale" v-model="selectedImageType.cfgScale"/>
-        </div>
-        <div class=" col-3">
-          <FieldComponent :field="fields.steps" v-model="selectedImageType.steps"/>
-        </div>
-      </div>
 
-      <div class="row">
-        <div class=" col-3">
-          <FieldComponent :field="fields.denoisingStrength" v-model="selectedImageType.denoisingStrength"/>
+        <div class="row">
+          <div class=" col-3">
+            <FieldComponent :field="fields.denoisingStrength" v-model="selectedImageType.denoisingStrength"/>
+          </div>
+          <div class=" col-3">
+            <FieldComponent :field="fields.seed" v-model="selectedImageType.seed"/>
+          </div>
+          <div class=" col-3">
+            <FieldComponent :field="fields.subseed" v-model="selectedImageType.subseed"/>
+          </div>
         </div>
-        <div class=" col-3">
-          <FieldComponent :field="fields.seed" v-model="selectedImageType.seed"/>
-        </div>
-        <div class=" col-3">
-          <FieldComponent :field="fields.subseed" v-model="selectedImageType.subseed"/>
-        </div>
-      </div>
-
+      </Form>
       <div class="row mt-2">
         <button type="button" class="btn btn-primary btn-sm col-2 offset-3" :disabled="!canSubmit" @click="save()">
           Enregistrer
@@ -93,7 +94,7 @@
 
 <script>
 import {mapActions, mapGetters} from "vuex";
-import {defineRule} from 'vee-validate';
+import {defineRule, Form} from 'vee-validate';
 import {required, between, integer} from '@vee-validate/rules';
 import VeeRulesService from "@/laboratory/services/veeRulesService.js";
 import {watch} from "vue";
@@ -113,9 +114,9 @@ export default {
   components: {
     FieldComponent,
     DeleteModalComponent,
+    Form
   },
-  props: {
-  },
+  props: {},
   data() {
     return {
       imageTypeList: [],
@@ -222,7 +223,7 @@ export default {
         denoisingStrength: null,
         seed: null,
         subseed: null,
-        subseedStrength :0,
+        subseedStrength: 0,
         restoreFaces: false,
         faceRestorationModel: null,
       }

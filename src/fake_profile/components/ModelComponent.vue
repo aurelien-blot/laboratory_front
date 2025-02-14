@@ -28,25 +28,27 @@
       </div>
     </div>
     <template v-if="selectedModel!=null">
-      <div class="row">
-        <div class="col-3">
-          <FieldComponent :field="fields.name" v-model="selectedModel.name" :disabled="!isNewItem"
-                          :show-error="isNewItem"/>
+      <Form novalidate @submit.prevent="save">
+        <div class="row">
+          <div class="col-3">
+            <FieldComponent :field="fields.name" v-model="selectedModel.name" :disabled="!isNewItem"
+                            :show-error="isNewItem"/>
+          </div>
+          <div class="col-9">
+            <FieldComponent :field="fields.description" v-model="selectedModel.description"/>
+          </div>
         </div>
-        <div class="col-9">
-          <FieldComponent :field="fields.description" v-model="selectedModel.description"/>
+        <div class="row">
+          <div class="col-12">
+            <FieldComponent :field="fields.prompt" v-model="selectedModel.prompt"/>
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          <FieldComponent :field="fields.prompt" v-model="selectedModel.prompt"/>
+        <div class="row">
+          <div class="col-12">
+            <FieldComponent :field="fields.negativePrompt" v-model="selectedModel.negativePrompt"/>
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          <FieldComponent :field="fields.negativePrompt" v-model="selectedModel.negativePrompt"/>
-        </div>
-      </div>
+      </Form>
 
       <div class="row mt-2">
         <button type="button" class="btn btn-primary btn-sm col-2 offset-3" :disabled="!canSubmit" @click="save()">
@@ -71,7 +73,7 @@
 import {mapActions, mapGetters} from "vuex";
 import ErrorService from "@/laboratory/services/errorService.js";
 import ModelApiService from "@/fake_profile/services/api/modelApiService.js";
-import {defineRule} from 'vee-validate';
+import {defineRule, Form} from 'vee-validate';
 import {required} from '@vee-validate/rules';
 import VeeRulesService from "@/laboratory/services/veeRulesService.js";
 import {watch} from "vue";
@@ -79,15 +81,14 @@ import DeleteModalComponent from "@/laboratory/components/modal/DeleteModalCompo
 import {FieldClass} from "@/laboratory/class/fieldClass.js";
 import FieldComponent from "@/laboratory/components/form/FieldComponent.vue";
 
-defineRule('required', required);
 export default {
   name: 'ModelComponent',
   components: {
     FieldComponent,
     DeleteModalComponent,
+    Form
   },
-  props: {
-  },
+  props: {},
   data() {
     return {
       modelList: [],

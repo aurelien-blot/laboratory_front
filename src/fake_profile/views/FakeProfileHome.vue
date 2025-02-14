@@ -9,18 +9,19 @@
       <div class="row">
         <div class="col-lg-6 col-md-12 mb-3">
           <div class="finalArea">
-
-            <div class="row ">
-              <div class=" col-3">
-                <FieldComponent :field="fields.batchCount" v-model="request.batchCount"/>
+            <Form novalidate @submit.prevent="generate">
+              <div class="row ">
+                <div class=" col-3">
+                  <FieldComponent :field="fields.batchCount" v-model="request.batchCount"/>
+                </div>
+                <div class=" col-3">
+                  <FieldComponent :field="fields.batchSize" v-model="request.batchSize"/>
+                </div>
+                <div class=" col-2 offset-4 mt-3">
+                  <button class=" btn btn-primary" @click="generate" :disabled="!canGenerate">Générer</button>
+                </div>
               </div>
-              <div class=" col-3">
-                <FieldComponent :field="fields.batchSize" v-model="request.batchSize"/>
-              </div>
-              <div class=" col-2 offset-4 mt-3">
-                <button class=" btn btn-primary" @click="generate" :disabled="!canGenerate">Générer</button>
-              </div>
-            </div>
+            </Form>
           </div>
           <ModelComponent
               @update:isValid="isModelValid = $event"
@@ -83,6 +84,7 @@ import ImageTypeComponent from "@/fake_profile/components/ImageTypeComponent.vue
 import ModelComponent from "@/fake_profile/components/ModelComponent.vue";
 import FieldComponent from "@/laboratory/components/form/FieldComponent.vue";
 import {FieldClass} from "@/laboratory/class/fieldClass.js";
+import { Form} from 'vee-validate';
 import StableDiffusionApiService from "@/fake_profile/services/api/stableDiffusionApiService.js";
 import BasicModalComponent from "@/laboratory/components/modal/BasicModalComponent.vue";
 import FullScreenPictureModalComponent from "@/laboratory/components/modal/FullScreenPictureModalComponent.vue";
@@ -96,6 +98,7 @@ export default {
     ModelComponent,
     ImageTypeComponent,
     BasicViewComponent,
+    Form
   },
   data() {
     return {
@@ -138,11 +141,10 @@ export default {
   watch: {
     //watcher pour request.model.name, on recharge la liste des images générées
     'request.model.name': function (newVal, oldVal) {
-      if(newVal !== oldVal){
-        if(this.request.model==null || this.request.model.id!=null){
+      if (newVal !== oldVal) {
+        if (this.request.model == null || this.request.model.id != null) {
           this.loadGeneratedImageList();
-        }
-        else{
+        } else {
           this.generatedImageList = [];
         }
       }
@@ -190,7 +192,7 @@ export default {
     async loadGeneratedImageList() {
       let that = this;
       let templateTitle = null;
-      if(this.request.model!=null && this.request.model.id!=null){
+      if (this.request.model != null && this.request.model.id != null) {
         templateTitle = this.request.model.name;
       }
       this.setLoading(true);
@@ -214,7 +216,7 @@ export default {
     async loadPicture(id) {
       let picture = await GeneratedImageApiService.loadPicture(id);
       let currentPicture = this.generatedImageList.find((element) => element.id === id);
-      if(!currentPicture){
+      if (!currentPicture) {
         ErrorService.showErrorInAlert("Impossible de trouver l'image");
       }
       let title = currentPicture.templateTitle + " : " + currentPicture.fileName + " - Seed : " + currentPicture.seedUsed + " - Subseed : " + currentPicture.subseedUsed;
