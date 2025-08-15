@@ -78,11 +78,12 @@ jobs:
             docker stop laboratory_front || true
             docker rm laboratory_front || true
             # 1) Router HTTPS (principal)
+            docker network create edge || true
             docker run -d --name laboratory_front \
               --restart=always \
-              --network edge \
               --label 'traefik.enable=true' \
-              --label 'traefik.http.routers.laboratory_front.rule=Host(`labo-castruche.duckdns.org`)' \
+              --label 'traefik.docker.network=edge' \
+              --label "traefik.http.routers.laboratory_front.rule=Host(\"$DOMAIN\")" \
               --label 'traefik.http.routers.laboratory_front.entrypoints=websecure' \
               --label 'traefik.http.routers.laboratory_front.tls.certresolver=le' \
               --label 'traefik.http.services.laboratory_front.loadbalancer.server.port=80' \
