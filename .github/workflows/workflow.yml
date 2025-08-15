@@ -82,7 +82,8 @@ jobs:
             --network edge \
             -l "traefik.enable=true" \
             -l "traefik.http.routers.laboratory_front.rule=Host(`labo-castruche.duckdns.org`)" \
-            -l "traefik.http.routers.laboratory_front.entrypoints=web" \
+            -l "traefik.http.routers.laboratory_front.entrypoints=websecure" \
+            -l "traefik.http.routers.laboratory_front.tls.certresolver=le" \
             -l "traefik.http.services.laboratory_front.loadbalancer.server.port=80" \
             ghcr.io/$GHCR_USER/laboratory-front:latest
           EOF
