@@ -73,7 +73,7 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
             set -e
-            docker login ghcr.io -u $GHCR_USER -p $GHCR_TOKEN
+            echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
             docker pull ghcr.io/$GHCR_USER/laboratory-front:latest
             docker stop laboratory_front || true
             docker rm laboratory_front || true
