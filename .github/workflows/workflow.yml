@@ -18,7 +18,8 @@ concurrency:
 
 env:
   IMAGE: ghcr.io/${{ secrets.GHCR_USER }}/laboratory-front
-
+  DOMAIN: labo-castruche.duckdns.org
+  
 jobs:
   check-secrets:
     runs-on: ubuntu-latest
