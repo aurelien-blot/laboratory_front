@@ -77,6 +77,12 @@ jobs:
             docker pull ghcr.io/$GHCR_USER/laboratory-front:latest
             docker stop laboratory_front || true
             docker rm laboratory_front || true
-            docker run -d --name laboratory_front --restart=always -p 80:80 \
-              ghcr.io/$GHCR_USER/laboratory-front:latest
+            docker run -d --name laboratory_front \
+            --restart=always \
+            --network traefik-net \
+            -l "traefik.enable=true" \
+            -l "traefik.http.routers.laboratory_front.rule=Host(`front.example.com`)" \
+            -l "traefik.http.routers.laboratory_front.entrypoints=web" \
+            -l "traefik.http.services.laboratory_front.loadbalancer.server.port=80" \
+            ghcr.io/$GHCR_USER/laboratory-front:latest
           EOF
