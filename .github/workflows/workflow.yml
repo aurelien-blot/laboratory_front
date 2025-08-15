@@ -5,7 +5,7 @@ on:
     branches: [ main ]
     paths:
       - 'laboratory_front/**'
-      - '.github/workflows/front.yml'
+      - '.github/workflows/workflow.yml'
   workflow_dispatch:
 
 permissions:
@@ -50,7 +50,6 @@ jobs:
 
       - name: Build image
         run: |
-          cd laboratory_front
           docker build -t $IMAGE:latest -t $IMAGE:${{ steps.vars.outputs.TAG }} .
 
       - name: Push images
