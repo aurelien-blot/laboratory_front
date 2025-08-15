@@ -79,7 +79,7 @@ jobs:
             docker rm laboratory_front || true
             docker run -d --name laboratory_front \
             --restart=always \
-            --network traefik-net \
+            --network edge \
             -l "traefik.enable=true" \
             -l "traefik.http.routers.laboratory_front.rule=Host(`front.example.com`)" \
             -l "traefik.http.routers.laboratory_front.entrypoints=web" \
