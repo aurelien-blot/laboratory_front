@@ -82,6 +82,7 @@ jobs:
             docker network create edge || true
             docker run -d --name laboratory_front \
               --restart=always \
+              --network edge \
               --label 'traefik.enable=true' \
               --label 'traefik.docker.network=edge' \
               --label "traefik.http.routers.laboratory_front.rule=Host(\"$DOMAIN\")" \
@@ -89,14 +90,4 @@ jobs:
               --label 'traefik.http.routers.laboratory_front.tls.certresolver=le' \
               --label 'traefik.http.services.laboratory_front.loadbalancer.server.port=80' \
               ghcr.io/$GHCR_USER/laboratory-front:latest
-
-            # 2) (Optionnel) Router HTTP qui redirige vers HTTPS
-            --label 'traefik.http.middlewares.lf-https-redirect.redirectscheme.scheme=https' \
-            --label 'traefik.http.routers.laboratory_front_http.rule=Host(\"$DOMAIN\")' \
-            --label 'traefik.http.routers.laboratory_front_http.entrypoints=web' \
-            --label 'traefik.http.routers.laboratory_front_http.middlewares=lf-https-redirect' \
-            docker label laboratory_front traefik.http.middlewares.lf-https-redirect.redirectscheme.scheme=https || true
-            docker label laboratory_front traefik.http.routers.laboratory_front_http.rule="Host(\"$DOMAIN\")" || true
-            docker label laboratory_front traefik.http.routers.laboratory_front_http.entrypoints=web || true
-            docker label laboratory_front traefik.http.routers.laboratory_front_http.middlewares=lf-https-redirect || true
           EOF
