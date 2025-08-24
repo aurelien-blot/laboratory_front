@@ -5,7 +5,7 @@ on:
     branches: [ main ]
     paths:
       - 'laboratory_front/**'
-      - '.github/workflows/front.yml'
+      - '.github/workflows/workflow.yml'
   workflow_dispatch:
 
 permissions:
@@ -18,7 +18,8 @@ concurrency:
 
 env:
   IMAGE: ghcr.io/${{ secrets.GHCR_USER }}/laboratory-front
-
+  DOMAIN: labo-castruche.duckdns.org
+  
 jobs:
   check-secrets:
     runs-on: ubuntu-latest
@@ -34,7 +35,7 @@ jobs:
             exit 1
           fi
           echo "✅ Secrets GHCR présents"
-
+          
   build-and-push:
     runs-on: ubuntu-latest
     needs: check-secrets
@@ -50,7 +51,6 @@ jobs:
 
       - name: Build image
         run: |
-          cd laboratory_front
           docker build -t $IMAGE:latest -t $IMAGE:${{ steps.vars.outputs.TAG }} .
 
       - name: Push images
@@ -72,12 +72,22 @@ jobs:
           GHCR_USER: ${{ secrets.GHCR_USER }}
           GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
             set -e
-            docker login ghcr.io -u $GHCR_USER -p $GHCR_TOKEN
+            echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
             docker pull ghcr.io/$GHCR_USER/laboratory-front:latest
             docker stop laboratory_front || true
             docker rm laboratory_front || true
-            docker run -d --name laboratory_front --restart=always -p 80:80 \
+            # 1) Router HTTPS (principal)
+            docker network create edge || true
+            docker run -d --name laboratory_front \
+              --restart=always \
+              --network edge \
+              --label 'traefik.enable=true' \
+              --label 'traefik.docker.network=edge' \
+              --label "traefik.http.routers.laboratory_front.rule=Host(\"$DOMAIN\")" \
+              --label 'traefik.http.routers.laboratory_front.entrypoints=websecure' \
+              --label 'traefik.http.routers.laboratory_front.tls.certresolver=le' \
+              --label 'traefik.http.services.laboratory_front.loadbalancer.server.port=80' \
               ghcr.io/$GHCR_USER/laboratory-front:latest
           EOF
