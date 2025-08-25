@@ -13,7 +13,7 @@ RUN npm install
 # Copy project files into the docker image
 COPY . .
 
-# Build the application
+# Build the application : le double -- -- est pour donner l'argument à vite
 RUN npm run build -- --mode production
 
 # Stage 2: Serve the application with Nginx
