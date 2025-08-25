@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Build the application
-RUN npm run build --mode production
+RUN npm run build -- --mode production
 
 # Stage 2: Serve the application with Nginx
 FROM nginx:alpine
