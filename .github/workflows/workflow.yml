@@ -3,9 +3,6 @@ name: CI/CD - Front (Vue.js)
 on:
   push:
     branches: [ main ]
-    paths:
-      - 'laboratory_front/**'
-      - '.github/workflows/workflow.yml'
   workflow_dispatch:
 
 permissions:
