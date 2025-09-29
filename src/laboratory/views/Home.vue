@@ -57,6 +57,11 @@ export default {
           name: "Fake Profile",
           link: "/fake-profile",
           needConnection: true
+        },
+        {
+          name: "Mes recettes",
+          link: "/cooking",
+          needConnection: false
         }
       ],
       isConnectedToApi: false,
