@@ -376,6 +376,94 @@ export default {
               "Etape 4 : Eteindre le feu, laisser reposer 10 minutes<br/>" +
               "<br/>" +
               "Retirer enfin le couvercle et c'est good !"
+        },
+        {
+          id : 7,
+          title : "Boeuf tendre et brocoli 3 façons",
+          time : "90 min?",
+          ingredients: [
+              "4 faux-filets ou filets de bœuf ou pièce tendre et maturée (100gr par personne)",
+              "2 gros brocoli (≈ 1.2kg)",
+              "2 échalotes",
+              "250ml de vin rouge",
+              "250ml de bouillon de boeuf ou fond de veau",
+              "Beurre 100g",
+              "2/3 de pâte brisée",
+              "2 œufs",
+              "50g de fromage râpé",
+              "200ml de crème 15%",
+              "40gr d'amandes effilées",
+              "sel, poivre",
+              "huile d'olive",
+              "sirop d'érable",
+              "muscade"
+          ],
+          description:
+          "1. Préparer le brocoli : <br/>" +
+              "<br/>" +
+              "Coupe les fleurettes, pèle et coupe la tige en morceaux.<br/>" +
+              "<br/>" +
+             "Réserver 300gr de fleurettes pour les brocolis grillés.<br/>" +
+              "<br/>" +
+              "Mettre le reste dans une casserole d’eau bouillante salée, cuire 8-10 minutes.<br/>" +
+              "<br/>" +
+            "2. Préparer la sauce : <br/>" +
+              "<br/>" +
+              "Émince les 2 échalotes, fais-les revenir dans un peu d’huile.<br/>" +
+              "<br/>" +
+              "Déglace avec les 250ml de vin rouge, laisse réduire de moitié.<br/>" +
+              "<br/>" +
+              "Ajoute les 205ml de fond de veau ou bouillon, laisse réduire encore (tu dois obtenir une sauce sirupeuse).<br/>" +
+              "<br/>" +
+              "Si trop acide, ajoute un peu de sirop d’érable.<br/>" +
+              "<br/>" +
+              "Mixte au mixeur plongeant avec le beurre → ça lie et donne de la brillance.<br/>" +
+              "<br/>" +
+              "Filtre (facultatif) et réserve au frigo.<br/>" +
+              "<br/>" +
+              "3. La purée : <br/>" +
+              "<br/>" +
+              "Égoutte très bien (important pour pas avoir d’eau).<br/>" +
+              "<br/>" +
+              "Prends 500gr de brocoli cuit <br/>" +
+              "<br/>" +
+              "Mixe au blender ou au mixeur plongeant avec 40g de beurre + 100ml de crème.<br/>" +
+              "<br/>" +
+              "Assaisonne avec sel, poivre, une pincée de muscade.<br/>"
+              + "<br/>" +
+              "4. Brocoli grillés : <br/>" +
+              "<br/>" +
+              "Mets les 300g de fleurettes sur une plaque, arrose d’huile, sel, poivre.<br/>" +
+              "<br/>" +
+              "Four à 200 °C (400 °F), 15–20 min → elles doivent dorer légèrement."
+              + "<br/>" +
+              "5. Les tartelettes : <br/>" +
+              "<br/>" +
+              "Fonds : étale la pâte, fonce 8 moules à tartelettes.<br/>" +
+              "<br/>" +
+              "Pique la pâte, couvre papier/parchment + pois secs.<br/>" +
+              "<br/>" +
+              "Précuis 10 min à 180 °C, retire le papier/poids, recuis 5 min.<br/>" +
+              "<br/>" +
+              "Appareil : mixe les 250g de brocolis cuits avec les 2 œufs + 100ml crème + 50g fromage.<br/>" +
+              "<br/>" +
+              "Assaisonne sel/poivre.<br/>" +
+              "<br/>" +
+              "Verse l’appareil dans les fonds précuits.<br/>" +
+              "<br/>" +
+              "Enfourne à 180 °C (350 °F) 20–25 min, jusqu’à doré."+
+              "<br/>" +
+              "FINAL : 15 min avant de manger<br/>" +
+              "<br/>" +
+              "Enfourner les tartelettes (10 min à 180 °C).<br/>" +
+              "<br/>" +
+              "Si possible mettre les assiettes au four quelques minutes <br/>" +
+              "<br/>" +
+              "Finir les fleurettes de brocolis à la poêle au beurre/amandes).<br/>" +
+              "<br/>" +
+              "Saisir la viande à la poêle 2min de chaque côté dans du beurre, laisser reposer.<br/>" +
+              "<br/>" +
+              "Monter la sauce au beurre au dernier moment."
         }
       ],
       selectedRecipe: null,
